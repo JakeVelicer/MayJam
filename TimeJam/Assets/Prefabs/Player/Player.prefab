@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6526632516643132702}
   - component: {fileID: 6526632516643132703}
   - component: {fileID: 6526632516643132696}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: LeanAnimator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,7 +78,7 @@ GameObject:
   - component: {fileID: 7085721663646366575}
   - component: {fileID: 963194229}
   - component: {fileID: 1000429878215801598}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -199,7 +199,8 @@ GameObject:
   - component: {fileID: 1149800568}
   - component: {fileID: 2454204925280885241}
   - component: {fileID: 7707081060816314902}
-  m_Layer: 0
+  - component: {fileID: 1207889699}
+  m_Layer: 2
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -328,3 +329,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_interpolatedTransform: {fileID: 2454204925280885241}
+--- !u!114 &1207889699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7085721664118310506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7516bf1278086a44953a17d04d6ee3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rayCastLength: 6

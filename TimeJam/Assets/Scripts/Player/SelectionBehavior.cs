@@ -7,7 +7,12 @@ public class SelectionBehavior : MonoBehaviour
     public float rayCastLength = 6;
     private RaycastHit hit;
     private GameObject selectedObject;
-    public PlayerInput playerInput;
+    private PlayerInput playerInput;
+
+    private void Awake()
+    {
+        playerInput = GetComponent<PlayerInput>();
+    }
 
     // Start is called before the first frame update
     void Start()

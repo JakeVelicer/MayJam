@@ -20,7 +20,7 @@ public class ObjectiveUIManager : MonoBehaviour
 
     public TextMeshProUGUI FindTextFromName(string nameOfText)
     {
-
+        return null;
     }
 
     public void DisplayWinUI()
