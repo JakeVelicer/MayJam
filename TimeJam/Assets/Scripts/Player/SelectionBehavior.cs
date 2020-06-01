@@ -5,13 +5,16 @@ using UnityEngine;
 public class SelectionBehavior : MonoBehaviour
 {
     public float rayCastLength = 6;
+    public Transform hand;
     private RaycastHit hit;
     private GameObject selectedObject;
     private PlayerInput playerInput;
+    private PlayerInventory playerInventory;
 
     private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
+        playerInventory = GetComponent<PlayerInventory>();
     }
 
     // Start is called before the first frame update
@@ -46,7 +49,16 @@ public class SelectionBehavior : MonoBehaviour
     {
         if (selectedObject != null)
         {
-            selectedObject.GetComponent<Interactable>().ActivateInteraction();
+            if (selectedObject.GetComponent<Interactable>().canPickUp)
+            {
+                selectedObject.GetComponent<InventoryItem_Behavior>().PickUp(hand);
+                playerInventory.PickUpItem(selectedObject);
+                selectedObject = null;
+            }
+            else
+            {
+                selectedObject.GetComponent<Interactable>().ActivateInteraction();
+            }
         }
     }
 }

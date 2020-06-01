@@ -5,103 +5,116 @@ using UnityEngine;
 public class PlayerInventory : MonoBehaviour
 {
 
-    public Dictionary<string, GameObject> inventory = new Dictionary<string, GameObject>();
-    [Tooltip("Shows the contents of the Dictionary")] public List<GameObject> dictionaryContent;
-    public bool isHittingObj; //detects if raycast is hitting object with InventoryItem_Behavior script. 
-                              //Should be true ONLY if object has the InventoryItem_Behavior script
-    [Tooltip("Gets InventoryItem_Behavior script from raycastHit object")] public InventoryItem_Behavior item;
-
-    public string equippedObject;
+    public GameObject[] inventory;
+    public GameObject equippedObject;
     public GameObject lastEquipped;
-    public int i = -1;
-    public int lastIndex = -2;
+    public int selectedIndex = 0;
 
     // Update is called once per frame
     void Update()
     {
-
-        Debug.Log(dictionaryContent.Capacity);
-        DropItem();
-        //Adds items to Dictionary
-        if (isHittingObj)
-        {
-            //gets the ItemIndex script that is attached to the object the raycast hits
-            //item = hit.collider.GetComponent<InventoryItem_Behavior>(); 
-
-            //if RC is hitting and player interacts, add object to List at the items index
-            if (Input.GetKeyDown(KeyCode.E) && !item.isCollected && item != null)
-            {
-                item.Interact();
-                inventory.Add(item.name, item.gameObject);
-                dictionaryContent.Add(item.gameObject);
-                //Debug.Log(item.name);
-            }
-        }
-
         NavigateInventory();
     }
 
     public void NavigateInventory()
     {
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            i++;
-            //lastIndex++;
-            if (i < dictionaryContent.Capacity)
+            selectedIndex++;
+            if(selectedIndex < inventory.Length - 1)
             {
-                //Debug.Log("Less than");
-                EquippedItem(i);
+                if(inventory[selectedIndex] != null)
+                {
+                    EquipItem();
+                }
+                else
+                {
+                    selectedIndex--;
+                }
             }
-            if(i == dictionaryContent.Capacity)
+            if(selectedIndex >= inventory.Length - 1)
             {
-                Debug.Log(i + " == " + dictionaryContent.Capacity);
-                i = 0;
-                EquippedItem(i);
+                if(inventory[0] != null)
+                {
+                    selectedIndex = 0;
+                    EquipItem();
+                }
+                else
+                {
+                    selectedIndex--;
+                }
             }
-
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            selectedIndex--;
+            if(selectedIndex > 0)
+            {
+                if(inventory[selectedIndex] != null)
+                {
+                    EquipItem();
+                }
+                else
+                {
+                    selectedIndex++;
+                }
+            }
+            if(selectedIndex <= 0)
+            {
+                if(inventory[inventory.Length - 1] != null)
+                {
+                    selectedIndex = inventory.Length - 1;
+                    EquipItem();
+                }
+                else
+                {
+                    selectedIndex++;
+                }
+            }
         }
     }
 
-    private void EquippedItem(int i)
+    public void PickUpItem(GameObject itemToPickUp)
     {
-        UnequipItem();
-        equippedObject = dictionaryContent[i].gameObject.name;
-        
-        //Debug.Log(equippedObject);
-
-        GameObject.Find(equippedObject).GetComponent<InventoryItem_Behavior>().isEquipped = true;
-        Debug.Log(dictionaryContent[i].GetComponent<InventoryItem_Behavior>().name);
-        
-        item.Interact();
-    }
-    private void UnequipItem()
-    {
-        if (i > 0)
+        if (inventory[0] == null)
         {
-            lastEquipped = GameObject.Find(equippedObject);
-            lastEquipped.GetComponent<InventoryItem_Behavior>().isEquipped = false;
-            item.Interact();
+            inventory[0] = itemToPickUp;
+            EquipItem();
+            selectedIndex = 0;
+            Debug.Log(inventory[0]);
         }
-        if(lastIndex == 3)
+        else
         {
-            lastEquipped = GameObject.Find(dictionaryContent[i].gameObject.name);
-            lastEquipped.GetComponent<InventoryItem_Behavior>().isEquipped = false;
-            item.Interact();
+            for (int i = 0; i < inventory.Length; i++)
+            {
+                if (inventory[i] == null && !itemToPickUp.GetComponent<InventoryItem_Behavior>().isCollected)
+                {
+                    inventory[i] = itemToPickUp;
+                    EquipItem();
+                    Debug.Log(inventory[i]);
+                    break;
+                }
+            }
         }
     }
 
-    public void DropItem()
+    private void EquipItem()
     {
-        if(Input.GetKeyDown(KeyCode.E) && item.isEquipped == true)
+        if (equippedObject != null)
         {
-            //lastEquipped = GameObject.Find(equippedObject);
-            //GameObject.Find(equippedObject).GetComponent<InventoryItem_Behavior>().isEquipped = false;
-            GameObject.Find(equippedObject).GetComponent<InventoryItem_Behavior>().isDropped = true;
-            item.Interact();
+            UnequipItem(equippedObject);
+            Debug.Log(equippedObject);
         }
-        else if(item.isEquipped == true && item != null)
-        {
-            GameObject.Find(equippedObject).GetComponent<InventoryItem_Behavior>().isDropped = false;
-        }
+        equippedObject = inventory[selectedIndex];
+        equippedObject.SetActive(true);
+        equippedObject.GetComponent<InventoryItem_Behavior>().isEquipped = true;
     }
+
+    private void UnequipItem(GameObject lastObjectSelected)
+    {
+        lastEquipped = lastObjectSelected;
+        lastEquipped.GetComponent<InventoryItem_Behavior>().isEquipped = false;
+        lastEquipped.SetActive(false);
+    }
+
 }
