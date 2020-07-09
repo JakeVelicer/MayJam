@@ -9,7 +9,7 @@ using EZCameraShake;
 public class PlayerInput : MonoBehaviour
 {
     //test comment
-    private PlayerNewInput playerControlInput = null;
+    [HideInInspector] public PlayerNewInput playerControlInput = null;
     //public Manager_Weapons weaponManager;
 
     private Vector2 previous;
